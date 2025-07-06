@@ -1,6 +1,6 @@
 # Sketching a WebGPU for shaders like ReduceBuffer
 
-### HybridShader API
+### HostedShader API
 - [ ] What does the 'lifecycle' api look like in TypeScript?
 - [ ] How is conditional compilation handled? e.g. for subgroups
 - [ ] How are generics handled?
@@ -19,6 +19,58 @@
 - [ ] How do you write workgroupReduce to share with other shader authors?
 - [ ] How do you write ReduceBuffer? generics? conditions? binop?
 
+```ts
+import { perlin2d } from '@typegpu/noise';
+
+const hello = tgpu.fragmentFn({})(() => {
+  const noise = perlin2d.sample(d.vec2f(1.1, 2.2));
+});
+
+const cache = perlin2d.createCache();
+
+const pipeline = root
+  .with(perlin2d.getJunctionGradientSlot, cache.getJunctionGradient)
+  .withVertex(hello, { ... })
+  .withFragment(hello, { ... })
+  .createPipeline();
+
+root.unwrap(pipeline); // => GPUPipeline
+```
+
+```ts
+const asd = tgpu.fn()(() => {
+  // ...
+});
+
+
+```
+
+slots allow configuring plugin functions/variables for a HostedShader
+. via `with` syntax
+. at a higher level then just the definition of the particular shader,
+bubbles up like 'context'.
+
+const assembly = runsASequenceOfHostedShaders([setup, reduceBuffer, render, ]);
+assembly.with(vertexListbuffer.mapFnSlot, convertToWorldSpace)
 
 
 
+```ts
+import some from './shader.wesl?typegpu'
+
+
+```
+
+```ts
+const destBuffer = root.createBuffer(d.arrayOf(d.f32, 512)).$usage('storage');
+
+const reduce = Reduce({
+  destBuffer: root.unwrap(destBuffer),
+});
+
+const values = await destBuffer.read();
+//    ^? number[]
+```
+
+
+reduce.with(reduce.mapFnSlot, myMapFn)

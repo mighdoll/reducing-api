@@ -6,6 +6,8 @@ export interface ReduceBufferOptions {
   device: OptParam<GPUDevice>;
   srcBuffer: OptParam<GPUBuffer>;
   destBuffer: OptParam<GPUBuffer>;
+
+  /** binary operation to apply */
   binOp: OptParam<BinOp>;
 
   /** 'fuse' a wgsl function that runs before reduce */
@@ -14,11 +16,19 @@ export interface ReduceBufferOptions {
   // TODO consider an Iterator api instead?
   startOffset: OptParam<number>; // offset in bytes
   stride: OptParam<number>; // stride in bytes
+
+  destOffset?: OptParam<number>; // offset in bytes for destBuffer
 }
 
 export interface ReduceBuffer extends HostedShader {
   device(newDevice: GPUDevice): ReduceBuffer;
   device(): GPUDevice;
+
+  destBuffer(newDestBuffer: GPUBuffer): ReduceBuffer;
+  destBuffer(): GPUBuffer | undefined;
+
+  mapFn(newMapFn: TBD): ReduceBuffer;
+  mapFn(): TBD | undefined;
 }
 
 /** create a hosted shader that knows how to reduce GPUBuffers */
