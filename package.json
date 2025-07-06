@@ -1,0 +1,10 @@
+{
+  "name": "reducing-api",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.6",
+    "@typescript/native-preview": "7.0.0-dev.20250705.1",
+    "@webgpu/types": "^0.1.63"
+  }
+}
